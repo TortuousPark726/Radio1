@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Radio1 - Configuration</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&family=Inter:wght@400;500;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {
+          "on-primary": "#003914",
+          "surface-container-low": "#161d16",
+          "tertiary-container": "#a3a1a1",
+          "on-secondary": "#2f3131",
+          "on-tertiary": "#313030",
+          "secondary-container": "#454747",
+          "secondary-fixed-dim": "#c6c6c7",
+          "live-indicator": "#FF4B2B",
+          "on-secondary-container": "#b4b5b5",
+          "on-surface-variant": "#bccbb9",
+          "surface-dim": "#0e150e",
+          "on-primary-fixed": "#002108",
+          "tertiary": "#c8c6c5",
+          "surface-variant": "#2f372e",
+          "secondary-fixed": "#e2e2e2",
+          "primary-fixed": "#72fe8f",
+          "inverse-on-surface": "#2b322a",
+          "surface": "#0e150e",
+          "surface-container-lowest": "#091009",
+          "on-secondary-fixed": "#1a1c1c",
+          "on-error": "#690005",
+          "on-tertiary-container": "#383838",
+          "surface-container-highest": "#2f372e",
+          "outline-variant": "#3d4a3d",
+          "error": "#ffb4ab",
+          "on-tertiary-fixed": "#1c1b1b",
+          "error-container": "#93000a",
+          "primary-container": "#1db954",
+          "secondary": "#c6c6c7",
+          "on-secondary-fixed-variant": "#454747",
+          "inverse-primary": "#006e2d",
+          "on-surface": "#dde5d9",
+          "outline": "#869585",
+          "surface-container": "#1a211a",
+          "surface-base": "#121212",
+          "primary-fixed-dim": "#53e076",
+          "waveform-dim": "#121212",
+          "primary": "#53e076",
+          "background": "#0e150e",
+          "surface-highlight": "#282828",
+          "surface-bright": "#333b33",
+          "surface-elevated": "#181818",
+          "tertiary-fixed": "#e5e2e1",
+          "on-primary-fixed-variant": "#005320",
+          "surface-container-high": "#242c24",
+          "on-background": "#dde5d9",
+          "surface-tint": "#53e076",
+          "on-tertiary-fixed-variant": "#474646",
+          "waveform-active": "#1ED760",
+          "inverse-surface": "#dde5d9",
+          "tertiary-fixed-dim": "#c8c6c5",
+          "on-primary-container": "#004118",
+          "on-error-container": "#ffdad6"
+        },
+        borderRadius: {
+          DEFAULT: "1rem", lg: "2rem", xl: "3rem", full: "9999px"
+        },
+        spacing: {
+          "container-margin": "24px", "stack-lg": "32px", "stack-md": "16px",
+          "gutter": "16px", "unit": "4px", "stack-sm": "8px"
+        },
+        fontFamily: {
+          "headline-lg": ["Plus Jakarta Sans"], "body-md": ["Inter"],
+          "display-lg": ["Plus Jakarta Sans"], "headline-md": ["Plus Jakarta Sans"],
+          "label-bold": ["Inter"], "body-lg": ["Inter"],
+          "headline-lg-mobile": ["Plus Jakarta Sans"]
+        },
+        fontSize: {
+          "headline-lg": ["32px", {"lineHeight":"1.2","letterSpacing":"-0.02em","fontWeight":"700"}],
+          "body-md": ["14px", {"lineHeight":"1.5","fontWeight":"400"}],
+          "display-lg": ["48px", {"lineHeight":"1.1","letterSpacing":"-0.04em","fontWeight":"800"}],
+          "headline-md": ["24px", {"lineHeight":"1.3","fontWeight":"700"}],
+          "label-bold": ["12px", {"lineHeight":"1.2","letterSpacing":"0.05em","fontWeight":"700"}],
+          "body-lg": ["16px", {"lineHeight":"1.5","fontWeight":"500"}],
+          "headline-lg-mobile": ["28px", {"lineHeight":"1.2","fontWeight":"700"}]
+        }
+      }
+    }
+  }
+</script>
+<style>
+  .material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  }
+  .premium-glow { box-shadow: 0 0 25px rgba(30,215,96,0.15); }
+  .primary-glow-hover:hover { box-shadow: 0 0 30px rgba(30,215,96,0.4); transform: translateY(-2px); }
+  .waveform-container div { animation: wave 1.2s ease-in-out infinite alternate; }
+  @keyframes wave { 0% { height: 10%; opacity: 0.3; } 100% { height: 100%; opacity: 1; } }
+  .glass-card { background: rgba(24,24,24,0.7); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.05); }
+  .code-input {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid #3d4a3d;
+    border-radius: 0.75rem;
+    color: #53e076;
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: 10px;
+    text-align: center;
+    width: 100%;
+    padding: 12px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .code-input:focus { border-color: #53e076; box-shadow: 0 0 0 2px rgba(83,224,118,0.15); }
+  .code-input::placeholder { color: #3d4a3d; letter-spacing: 6px; font-size: 20px; }
+</style>
+</head>
+<body class="bg-background text-on-background font-body-md text-body-md overflow-hidden h-screen flex flex-col">
+
+<!-- Background waveform -->
+<div class="fixed inset-0 pointer-events-none opacity-20 flex items-center justify-center overflow-hidden">
+  <div class="waveform-container flex items-end gap-1 w-full h-[300px] max-w-[1200px] px-container-margin">
+    <script>
+      document.write(Array.from({length: 60}, (_, i) =>
+        `<div class="bg-primary flex-1 rounded-full" style="animation-delay:${i*0.05}s"></div>`
+      ).join(''));
+    </script>
+  </div>
+</div>
+
+<!-- Main -->
+<main class="flex-grow flex items-center justify-center p-container-margin relative z-10">
+  <div class="glass-card w-full max-w-[520px] p-stack-lg rounded-lg premium-glow flex flex-col items-center text-center">
+
+    <!-- Branding -->
+    <div class="flex flex-col items-center gap-stack-sm mb-stack-lg">
+      <div class="w-16 h-16 bg-primary rounded-xl flex items-center justify-center mb-stack-sm shadow-lg shadow-primary/20">
+        <span class="material-symbols-outlined text-on-primary text-[40px]">radio</span>
+      </div>
+      <h1 class="font-display-lg text-headline-lg-mobile md:text-display-lg text-on-surface">Radio1</h1>
+      <p class="font-body-lg text-on-surface-variant">Welcome back, <span id="user-name">...</span>!</p>
+    </div>
+
+    <!-- Action cards -->
+    <div class="w-full flex flex-col gap-stack-md mb-stack-lg" id="action-grid">
+
+      <!-- Create Room -->
+      <button onclick="createRoom()" id="btn-create"
+        class="group w-full text-left bg-surface-container-high hover:bg-surface-highlight border border-outline-variant rounded-lg p-stack-md transition-all duration-300 primary-glow-hover flex items-center gap-stack-md">
+        <div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center group-hover:bg-primary transition-colors flex-shrink-0">
+          <span class="material-symbols-outlined text-primary group-hover:text-on-primary">broadcast_on_home</span>
+        </div>
+        <div class="flex-grow">
+          <div class="flex items-center justify-between">
+            <span class="font-headline-md text-on-surface">Create Room</span>
+            <span class="bg-live-indicator text-[10px] px-2 py-0.5 rounded-full text-white font-bold animate-pulse">LIVE</span>
+          </div>
+          <p class="font-body-md text-on-surface-variant">Host your own station and invite friends.</p>
+        </div>
+      </button>
+
+      <!-- Join Room — collapses into input -->
+      <div id="join-card"
+        class="w-full bg-surface-container-high border border-outline-variant rounded-lg p-stack-md transition-all duration-300">
+
+        <!-- Default state: button -->
+        <button id="join-trigger" onclick="showJoinInput()"
+          class="group w-full text-left flex items-center gap-stack-md">
+          <div class="w-12 h-12 rounded-lg bg-on-surface-variant/10 flex items-center justify-center group-hover:bg-white transition-colors flex-shrink-0">
+            <span class="material-symbols-outlined text-on-surface-variant group-hover:text-surface-base">sensors</span>
+          </div>
+          <div class="flex-grow text-left">
+            <span class="font-headline-md text-on-surface block">Join Room</span>
+            <p class="font-body-md text-on-surface-variant">Enter a code to tune into a live room.</p>
+          </div>
+        </button>
+
+        <!-- Expanded: code input -->
+        <div id="join-input-section" class="hidden mt-stack-md">
+          <p class="font-body-md text-on-surface-variant mb-3">Enter the 6-character room code:</p>
+          <input id="join-code" class="code-input" type="text"
+            placeholder="XXXXXX" maxlength="6"
+            oninput="this.value = this.value.toUpperCase()"
+            onkeydown="if(event.key==='Enter') joinRoom()"/>
+          <div class="flex gap-stack-sm mt-stack-md">
+            <button onclick="hideJoinInput()"
+              class="flex-1 py-3 rounded-full border border-outline-variant font-label-bold text-on-surface-variant hover:border-white hover:text-white transition-all text-[11px] uppercase tracking-widest">
+              Cancel
+            </button>
+            <button onclick="joinRoom()"
+              class="flex-1 py-3 rounded-full bg-primary font-label-bold text-on-primary hover:opacity-90 transition-all text-[11px] uppercase tracking-widest">
+              Tune In
+            </button>
+          </div>
+          <p id="join-error" class="text-error text-[13px] mt-2 hidden"></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Divider -->
+    <div class="w-full flex items-center gap-stack-sm mb-stack-lg">
+      <div class="h-[1px] flex-grow bg-outline-variant"></div>
+      <span class="font-label-bold text-on-surface-variant uppercase tracking-widest text-[10px]">Options</span>
+      <div class="h-[1px] flex-grow bg-outline-variant"></div>
+    </div>
+
+    <!-- Sign out -->
+    <a href="/auth/logout"
+      class="w-full py-stack-md rounded-full border border-outline-variant font-label-bold text-on-surface-variant hover:text-white hover:border-white transition-all duration-200 uppercase tracking-widest text-[11px] flex items-center justify-center gap-2">
+      <span class="material-symbols-outlined text-[18px]">logout</span>
+      Sign Out
+    </a>
+
+  </div>
+</main>
+
+<!-- Bottom bar -->
+<div class="fixed bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary to-transparent opacity-50"></div>
+<footer class="w-full py-stack-md px-container-margin flex flex-col md:flex-row justify-between items-center gap-stack-sm text-on-surface-variant font-label-bold text-label-bold border-t border-outline-variant bg-surface-container-lowest z-10">
+  <div>© 2025 Radio1. Powered by Spotify.</div>
+  <div class="flex gap-stack-md">
+    <a class="hover:text-primary transition-colors" href="#">Privacy Policy</a>
+    <a class="hover:text-primary transition-colors" href="#">Developer Terms</a>
+  </div>
+</footer>
+
+<script>
+  // ── Auth check ────────────────────────────────────────────────────────────
+  fetch('/auth/token')
+    .then(r => r.ok ? r.json() : Promise.reject())
+    .then(data => {
+      document.getElementById('user-name').textContent = data.user?.name || 'Listener';
+    })
+    .catch(() => location.href = '/');
+
+  // ── Room actions ──────────────────────────────────────────────────────────
+  function createRoom() {
+    location.href = '/radio.html?action=create';
+  }
+
+  function showJoinInput() {
+    document.getElementById('join-trigger').classList.add('hidden');
+    document.getElementById('join-input-section').classList.remove('hidden');
+    setTimeout(() => document.getElementById('join-code').focus(), 50);
+  }
+
+  function hideJoinInput() {
+    document.getElementById('join-input-section').classList.add('hidden');
+    document.getElementById('join-trigger').classList.remove('hidden');
+    document.getElementById('join-code').value = '';
+    document.getElementById('join-error').classList.add('hidden');
+  }
+
+  function joinRoom() {
+    const code = document.getElementById('join-code').value.trim();
+    const err = document.getElementById('join-error');
+    if (code.length !== 6) {
+      err.textContent = 'Room codes are 6 characters long.';
+      err.classList.remove('hidden');
+      return;
+    }
+    location.href = `/radio.html?room=${code}`;
+  }
+
+  // ── Button press micro-interaction ────────────────────────────────────────
+  document.querySelectorAll('button').forEach(btn => {
+    btn.addEventListener('mousedown', () => btn.style.transform = 'scale(0.98)');
+    btn.addEventListener('mouseup',   () => btn.style.transform = '');
+    btn.addEventListener('mouseleave',() => btn.style.transform = '');
+  });
+
+  // ── Pre-fill code if arriving from a shared link ──────────────────────────
+  const params = new URLSearchParams(location.search);
+  if (params.get('room')) {
+    showJoinInput();
+    document.getElementById('join-code').value = params.get('room').toUpperCase();
+  }
+</script>
+</body>
+</html>

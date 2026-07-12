@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Radio1</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="page-hero">
+    <div class="hero-card">
+      <div class="logo-mark">📻</div>
+      <h1>Radio1</h1>
+      <p class="tagline">Create a room, invite friends, and listen together — each on their own device.</p>
+      <a href="/auth/login" class="btn btn-primary btn-lg">Connect with Spotify</a>
+      <p class="hero-note">⚠ Requires Spotify Premium &nbsp;·&nbsp; Works in Chrome &amp; Firefox</p>
+      <div id="error-msg" class="error-msg"></div>
+    </div>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(location.search);
+    if (params.get('error')) {
+      const el = document.getElementById('error-msg');
+      el.textContent = params.get('error') === 'auth_failed'
+        ? 'Authentication failed — please try again.'
+        : 'Something went wrong. Please try again.';
+      el.classList.add('visible');
+    }
+
+    // Redirect if already logged in
+    fetch('/auth/token').then(r => {
+      if (r.ok) location.href = '/room.html';
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Radio1 - Live</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {
+          "outline-variant":"#3d4a3d","background":"#0e150e","primary-fixed-dim":"#53e076",
+          "on-surface-variant":"#bccbb9","inverse-primary":"#006e2d","on-primary-container":"#004118",
+          "on-error":"#690005","tertiary-container":"#a3a1a1","primary-container":"#1db954",
+          "on-secondary-fixed":"#1a1c1c","on-primary-fixed":"#002108","inverse-surface":"#dde5d9",
+          "on-tertiary-fixed":"#1c1b1b","error-container":"#93000a","waveform-dim":"#121212",
+          "surface-container-high":"#242c24","on-tertiary":"#313030","on-secondary":"#2f3131",
+          "surface-bright":"#333b33","primary-fixed":"#72fe8f","surface":"#0e150e",
+          "secondary":"#c6c6c7","on-error-container":"#ffdad6","tertiary-fixed":"#e5e2e1",
+          "on-primary-fixed-variant":"#005320","on-secondary-container":"#b4b5b5",
+          "surface-highlight":"#282828","tertiary-fixed-dim":"#c8c6c5","on-surface":"#dde5d9",
+          "error":"#ffb4ab","surface-container":"#1a211a","tertiary":"#c8c6c5",
+          "secondary-fixed":"#e2e2e2","surface-container-highest":"#2f372e","primary":"#53e076",
+          "on-tertiary-fixed-variant":"#474646","on-background":"#dde5d9",
+          "live-indicator":"#FF4B2B","surface-variant":"#2f372e","surface-container-low":"#161d16",
+          "waveform-active":"#1ED760","outline":"#869585","surface-container-lowest":"#091009",
+          "inverse-on-surface":"#2b322a","surface-dim":"#0e150e","secondary-container":"#454747",
+          "on-primary":"#003914","on-tertiary-container":"#383838","secondary-fixed-dim":"#c6c6c7",
+          "surface-tint":"#53e076","surface-base":"#121212","surface-elevated":"#181818"
+        },
+        borderRadius: { DEFAULT:"1rem", lg:"2rem", xl:"3rem", full:"9999px" },
+        spacing: { unit:"4px","stack-md":"16px","stack-sm":"8px","stack-lg":"32px",gutter:"16px","container-margin":"24px" },
+        fontFamily: { "body-lg":["Inter"],"headline-md":["Plus Jakarta Sans"],"headline-lg-mobile":["Plus Jakarta Sans"],"label-bold":["Inter"],"display-lg":["Plus Jakarta Sans"],"headline-lg":["Plus Jakarta Sans"],"body-md":["Inter"] },
+        fontSize: {
+          "body-lg":["16px",{"lineHeight":"1.5","fontWeight":"500"}],
+          "headline-md":["24px",{"lineHeight":"1.3","fontWeight":"700"}],
+          "headline-lg-mobile":["28px",{"lineHeight":"1.2","fontWeight":"700"}],
+          "label-bold":["12px",{"lineHeight":"1.2","letterSpacing":"0.05em","fontWeight":"700"}],
+          "display-lg":["48px",{"lineHeight":"1.1","letterSpacing":"-0.04em","fontWeight":"800"}],
+          "headline-lg":["32px",{"lineHeight":"1.2","letterSpacing":"-0.02em","fontWeight":"700"}],
+          "body-md":["14px",{"lineHeight":"1.5","fontWeight":"400"}]
+        }
+      }
+    }
+  }
+</script>
+<style>
+  .material-symbols-outlined { font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24; }
+  .live-pulse { animation: pulse-red 2s infinite; }
+  @keyframes pulse-red {
+    0%   { box-shadow: 0 0 0 0   rgba(255,75,43,0.4); }
+    70%  { box-shadow: 0 0 0 8px rgba(255,75,43,0); }
+    100% { box-shadow: 0 0 0 0   rgba(255,75,43,0); }
+  }
+  .waveform-bar { animation: waveform 1.2s ease-in-out infinite; }
+  @keyframes waveform { 0%,100% { height:4px; } 50% { height:16px; } }
+  .glass-panel { background:rgba(24,24,24,0.6); backdrop-filter:blur(20px); border:1px solid rgba(61,74,61,0.3); }
+  ::-webkit-scrollbar { width:6px; }
+  ::-webkit-scrollbar-track { background:#091009; }
+  ::-webkit-scrollbar-thumb { background:#3d4a3d; border-radius:10px; }
+  ::-webkit-scrollbar-thumb:hover { background:#53e076; }
+
+  /* Volume slider */
+  input[type="range"].vol { -webkit-appearance:none; height:4px; border-radius:99px; background:#282828; outline:none; cursor:pointer; }
+  input[type="range"].vol::-webkit-slider-thumb { -webkit-appearance:none; width:12px; height:12px; border-radius:50%; background:#bccbb9; cursor:pointer; }
+  input[type="range"].vol:hover::-webkit-slider-thumb { background:#53e076; }
+
+  .toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(80px); background:#242c24; border:1px solid #3d4a3d; border-radius:99px; padding:8px 20px; font-size:13px; z-index:9999; transition:transform .25s ease; white-space:nowrap; color:#dde5d9; }
+  .toast.show { transform:translateX(-50%) translateY(0); }
+</style>
+</head>
+<body class="bg-background text-on-background font-body-md overflow-hidden selection:bg-primary-container selection:text-on-primary-container">
+
+<!-- ── Loading Overlay ─────────────────────────────────────────────────────── -->
+<div id="loading" class="fixed inset-0 z-[200] bg-background flex flex-col items-center justify-center gap-4">
+  <div class="w-10 h-10 bg-primary-container rounded-lg flex items-center justify-center shadow-[0_0_15px_rgba(29,185,84,0.3)]">
+    <span class="material-symbols-outlined text-on-primary-container" style="font-variation-settings:'FILL' 1">radio</span>
+  </div>
+  <p id="loading-msg" class="text-on-surface-variant text-[13px]">Connecting to Spotify…</p>
+  <div class="w-6 h-6 border-2 border-outline-variant border-t-primary rounded-full animate-spin"></div>
+</div>
+
+<!-- ── App Shell ───────────────────────────────────────────────────────────── -->
+<div id="app" style="display:none" class="flex h-screen w-screen overflow-hidden">
+
+  <!-- Sidebar -->
+  <aside class="w-[280px] h-screen flex-shrink-0 hidden md:flex flex-col border-r border-outline-variant bg-surface-container-lowest p-container-margin z-50">
+    <div class="flex items-center gap-3 mb-stack-lg">
+      <div class="w-10 h-10 bg-primary-container rounded-lg flex items-center justify-center text-on-primary-container shadow-[0_0_15px_rgba(29,185,84,0.3)]">
+        <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">radio</span>
+      </div>
+      <div>
+        <h1 class="font-headline-md text-headline-md font-bold text-primary">Radio1</h1>
+        <p class="text-on-surface-variant text-[10px] uppercase tracking-widest font-bold">Live Now</p>
+      </div>
+    </div>
+    <nav class="flex-1 space-y-1">
+      <a class="text-primary font-bold flex items-center gap-4 px-4 py-3 bg-surface-highlight rounded-lg" href="#">
+        <span class="material-symbols-outlined">home</span>
+        <span class="font-label-bold text-label-bold">Home</span>
+      </a>
+      <a onclick="document.getElementById('search-input').focus()" class="cursor-pointer text-on-surface-variant flex items-center gap-4 px-4 py-3 hover:bg-surface-highlight hover:text-on-surface transition-colors duration-200 rounded-lg">
+        <span class="material-symbols-outlined">search</span>
+        <span class="font-label-bold text-label-bold">Search</span>
+      </a>
+      <a href="/room.html" class="text-on-surface-variant flex items-center gap-4 px-4 py-3 hover:bg-surface-highlight hover:text-on-surface transition-colors duration-200 rounded-lg">
+        <span class="material-symbols-outlined">add_circle</span>
+        <span class="font-label-bold text-label-bold">New Room</span>
+      </a>
+    </nav>
+    <div class="mt-auto pt-stack-md border-t border-outline-variant space-y-1">
+      <button onclick="skipSong()" class="w-full bg-primary text-on-primary font-bold py-3 rounded-full mb-stack-md hover:opacity-90 transition-all flex items-center justify-center gap-2">
+        <span class="material-symbols-outlined text-[20px]">skip_next</span>
+        Skip Track
+      </button>
+      <a href="/auth/logout" class="text-on-surface-variant flex items-center gap-4 px-4 py-2 hover:text-on-surface transition-colors text-label-bold rounded-lg">
+        <span class="material-symbols-outlined">logout</span>
+        Sign Out
+      </a>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="flex-1 h-screen flex flex-col overflow-hidden min-w-0">
+
+    <!-- Header -->
+    <header class="sticky top-0 z-40 bg-surface-dim/80 backdrop-blur-xl h-16 flex justify-between items-center px-container-margin border-b border-outline-variant flex-shrink-0">
+      <div class="flex items-center gap-stack-md">
+        <!-- Room code badge -->
+        <div onclick="copyInvite()" class="cursor-pointer flex items-center gap-2 bg-surface-container px-3 py-1.5 rounded-full border border-outline-variant hover:border-primary transition-colors">
+          <span id="room-code" class="text-primary font-bold tracking-tight">------</span>
+          <span class="material-symbols-outlined text-on-surface-variant text-[18px]">content_copy</span>
+        </div>
+        <!-- Live badge -->
+        <div class="flex items-center gap-2 bg-live-indicator/20 text-live-indicator px-3 py-1 rounded-full live-pulse">
+          <span class="w-2 h-2 bg-live-indicator rounded-full"></span>
+          <span class="text-label-bold text-[10px] uppercase font-black">LIVE</span>
+          <span id="listeners-count" class="text-on-surface-variant text-[12px] font-medium ml-1">1</span>
+          <span class="text-on-surface-variant text-[12px] font-medium">listening</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-stack-md">
+        <a href="/room.html" class="hidden md:block bg-secondary-container text-on-secondary-container px-4 py-1.5 rounded-full font-label-bold text-[12px] hover:opacity-80 transition-all">
+          Leave Room
+        </a>
+        <a href="/auth/logout" class="bg-secondary-container text-on-secondary-container px-4 py-1.5 rounded-full font-label-bold text-[12px] hover:opacity-80 transition-all">
+          Sign Out
+        </a>
+      </div>
+    </header>
+
+    <!-- Content grid -->
+    <div class="flex-1 overflow-hidden flex flex-col md:flex-row p-gutter gap-gutter min-h-0">
+
+      <!-- Left: Player + Queue -->
+      <section class="flex-[0.4] flex flex-col gap-gutter min-w-0 md:min-w-[300px] md:max-w-[420px] overflow-y-auto md:overflow-hidden">
+
+        <!-- Player card -->
+        <div class="glass-panel p-container-margin rounded-lg flex flex-col items-center text-center">
+
+          <!-- Album art -->
+          <div class="relative w-full aspect-square max-w-[360px] mb-stack-lg group">
+            <div class="absolute inset-0 bg-primary/20 blur-3xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+            <!-- Placeholder -->
+            <div id="album-placeholder" class="w-full h-full rounded-lg bg-surface-highlight flex items-center justify-center relative z-10">
+              <span class="material-symbols-outlined text-on-surface-variant text-[64px]" style="font-variation-settings:'FILL' 1">music_note</span>
+            </div>
+            <!-- Real art -->
+            <img id="album-art" style="display:none" class="w-full h-full object-cover rounded-lg shadow-2xl relative z-10" alt="Album art"/>
+            <!-- Waveform overlay (visible when playing) -->
+            <div id="waveform" class="absolute bottom-4 right-4 z-20 hidden items-end gap-1 h-8">
+              <div class="waveform-bar w-1 bg-primary-fixed rounded-full" style="animation-delay:0s"></div>
+              <div class="waveform-bar w-1 bg-primary-fixed rounded-full" style="animation-delay:0.2s"></div>
+              <div class="waveform-bar w-1 bg-primary-fixed rounded-full" style="animation-delay:0.4s"></div>
+              <div class="waveform-bar w-1 bg-primary-fixed rounded-full" style="animation-delay:0.1s"></div>
+            </div>
+          </div>
+
+          <!-- Track info -->
+          <div class="w-full text-left">
+            <h2 id="track-name" class="font-headline-lg text-headline-lg text-on-surface mb-1 truncate">Nothing playing</h2>
+            <p id="track-artist" class="text-on-surface-variant font-body-lg mb-2 truncate">Add a song to get started</p>
+            <div id="track-added" class="flex items-center gap-2 mb-stack-lg" style="display:none">
+              <span class="text-primary/70 text-[12px] font-bold">Added by</span>
+              <span id="track-added-name" class="text-on-surface text-[12px] font-bold"></span>
+            </div>
+
+            <!-- Progress -->
+            <div class="space-y-2 mb-stack-lg">
+              <div class="h-1.5 w-full bg-surface-highlight rounded-full overflow-hidden relative">
+                <div id="progress-fill" class="absolute h-full bg-primary rounded-full shadow-[0_0_10px_rgba(29,185,84,0.6)] transition-none" style="width:0%"></div>
+              </div>
+              <div class="flex justify-between text-on-surface-variant text-label-bold text-[10px]">
+                <span id="time-current">0:00</span>
+                <span id="time-total">0:00</span>
+              </div>
+            </div>
+
+            <!-- Controls -->
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <span class="material-symbols-outlined text-on-surface-variant text-[20px]">volume_up</span>
+                <input type="range" id="volume-slider" class="vol w-24" min="0" max="100" value="80"
+                  oninput="setVolume(this.value / 100)"/>
+              </div>
+              <button onclick="skipSong()" class="w-10 h-10 flex items-center justify-center rounded-full bg-surface-highlight text-on-surface hover:bg-surface-variant transition-all active:scale-90">
+                <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">skip_next</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Queue -->
+        <div class="glass-panel p-4 rounded-lg flex flex-col" style="min-height:180px">
+          <div class="flex justify-between items-center mb-stack-sm">
+            <h3 class="text-[10px] font-black text-on-surface-variant uppercase tracking-widest">Up Next</h3>
+            <span id="queue-count" class="text-[10px] font-bold text-primary uppercase">0 Songs</span>
+          </div>
+          <div id="queue-list" class="flex-1 flex flex-col items-center justify-center border-2 border-dashed border-outline-variant rounded-lg py-4">
+            <p class="text-on-surface-variant text-[12px] italic">Queue is empty — search for songs to add</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Right: Search + Listeners -->
+      <section class="flex-1 flex flex-col gap-gutter min-w-0 overflow-hidden">
+
+        <!-- Search card -->
+        <div class="glass-panel p-container-margin rounded-lg flex-1 flex flex-col overflow-hidden">
+          <h3 class="text-[10px] font-black text-on-surface-variant uppercase tracking-widest mb-stack-md">Add to Queue</h3>
+          <div class="flex gap-2 mb-stack-lg">
+            <div class="flex-1 relative group">
+              <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary transition-colors">search</span>
+              <input id="search-input" type="text"
+                class="w-full bg-surface-highlight border-0 rounded-full py-3.5 pl-12 pr-6 text-on-surface placeholder:text-on-surface-variant/50 focus:ring-2 focus:ring-primary transition-all outline-none"
+                placeholder="Search for a song or artist…"
+                oninput="onSearchInput()"
+                onkeydown="if(event.key==='Enter') doSearch()"/>
+            </div>
+            <button onclick="doSearch()" class="bg-primary text-on-primary px-8 rounded-full font-bold hover:opacity-90 transition-all shadow-[0_0_15px_rgba(83,224,118,0.2)]">
+              Search
+            </button>
+          </div>
+          <!-- Results -->
+          <div id="search-results" class="flex-1 overflow-y-auto pr-2 space-y-1">
+            <div class="flex flex-col items-center justify-center h-40 text-on-surface-variant">
+              <span class="material-symbols-outlined text-[40px] mb-2 opacity-40">search</span>
+              <p class="text-[13px]">Search for songs to add to the queue</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Listeners card -->
+        <div class="glass-panel p-4 rounded-lg">
+          <h3 class="text-[10px] font-black text-on-surface-variant uppercase tracking-widest mb-stack-sm">Listeners</h3>
+          <div id="listeners-list" class="flex -space-x-2 flex-wrap gap-y-1"></div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-surface-container-lowest border-t border-outline-variant py-stack-sm px-container-margin flex flex-col md:flex-row justify-between items-center gap-4 flex-shrink-0">
+      <div class="flex items-center gap-4">
+        <span class="text-on-surface font-bold text-label-bold">Radio1</span>
+        <span class="text-on-surface-variant font-label-bold text-[10px]">© 2025 Radio1. Powered by Spotify.</span>
+      </div>
+      <div class="flex gap-stack-md">
+        <a class="text-on-surface-variant hover:text-primary transition-colors text-[10px] font-bold uppercase tracking-wider" href="#">Privacy Policy</a>
+        <a class="text-on-surface-variant hover:text-primary transition-colors text-[10px] font-bold uppercase tracking-wider" href="#">Developer Terms</a>
+      </div>
+    </footer>
+  </main>
+</div>
+
+<!-- Mobile FAB -->
+<div class="fixed bottom-6 right-6 md:hidden z-50">
+  <button onclick="document.getElementById('search-input').scrollIntoView({behavior:'smooth'}); document.getElementById('search-input').focus()"
+    class="bg-primary text-on-primary w-14 h-14 rounded-full flex items-center justify-center shadow-2xl active:scale-90 transition-transform">
+    <span class="material-symbols-outlined text-[32px]">add</span>
+  </button>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="https://sdk.scdn.co/spotify-player.js"></script>
+<script src="/js/radio.js"></script>
+</body>
+</html>
