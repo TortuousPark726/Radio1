@@ -122,11 +122,11 @@ function initSocket(action, roomParam) {
     showToast(`Room ${code} created — share the link!`);
   });
 
-  socket.on('room-joined', ({ code, queue, currentTrack: track, position, listeners }) => {
+  socket.on('room-joined', ({ code, userQueue, radioQueue, currentTrack: track, position, listeners }) => {
     roomCode = code;
     document.getElementById('room-code').textContent = code;
     renderListeners(listeners);
-    renderQueue(queue);
+    renderQueue(userQueue || [], radioQueue || []);
     if (track) {
       updateNowPlaying(track);
       playTrack(track.uri, position);
@@ -143,7 +143,7 @@ function initSocket(action, roomParam) {
     startProgressTimer(track.duration);
   });
 
-  socket.on('queue-updated', ({ queue }) => renderQueue(queue));
+  socket.on('queue-updated', ({ userQueue, radioQueue }) => renderQueue(userQueue || [], radioQueue || []));
 
   socket.on('playback-stopped', () => {
     stopProgressTimer();
@@ -159,6 +159,7 @@ function initSocket(action, roomParam) {
     document.getElementById('time-current').textContent = '0:00';
     document.getElementById('time-total').textContent = '0:00';
     document.title = 'Radio1';
+    renderQueue([], []);
   });
 
   socket.on('user-joined', ({ username, listeners }) => {
@@ -171,14 +172,23 @@ function initSocket(action, roomParam) {
     showToast(`${username} left the room`);
   });
 
-  socket.on('fetch-recommendations', async ({ seedTracks }) => {
+  socket.on('fetch-recommendations', async ({ seedArtistIds, seedArtistNames, seedTracks }) => {
     try {
-      const q = seedTracks?.length ? `?seed_tracks=${seedTracks.slice(0, 5).join(',')}` : '';
+      const params = new URLSearchParams();
+      if (seedArtistIds?.length)   params.set('seed_artist_ids',   seedArtistIds.slice(0, 5).join(','));
+      if (seedArtistNames?.length) params.set('seed_artist_names', seedArtistNames.slice(0, 5).join(','));
+      if (seedTracks?.length) {
+        // Encode as "Name|Artist|Year" triples joined by ";"
+        params.set('seed_tracks', seedTracks.map(t => `${t.name}|${t.artist}|${t.releaseYear || ''}`).join(';'));
+      }
+      const q = params.toString() ? '?' + params.toString() : '';
       const res = await fetch('/api/recommendations' + q);
-      if (!res.ok) return;
+      if (!res.ok) { console.warn('Recommendations fetch failed:', res.status); return; }
       const tracks = await res.json();
       socket.emit('send-recommendations', { tracks });
-    } catch { /* silent */ }
+    } catch (err) {
+      console.warn('Recommendations error:', err);
+    }
   });
 
   socket.on('room-error', msg => {
@@ -249,21 +259,22 @@ function formatTime(ms) {
 }
 
 /* ── UI: queue ──────────────────────────────────────────────────────────── */
-function renderQueue(queue) {
+function renderQueue(userQueue, radioQueue) {
   const list = document.getElementById('queue-list');
   const count = document.getElementById('queue-count');
-  count.textContent = queue.length + ' Song' + (queue.length !== 1 ? 's' : '');
+  const total = userQueue.length + radioQueue.length;
+  count.textContent = total + ' Song' + (total !== 1 ? 's' : '');
 
-  if (!queue.length) {
+  if (total === 0) {
     list.innerHTML = `
-      <div class="flex flex-col items-center justify-center py-6 text-on-surface-variant border-2 border-dashed border-outline-variant rounded-lg w-full">
-        <p class="text-[12px] italic">Queue is empty — search for songs to add</p>
+      <div class="flex flex-col items-center justify-center py-6 gap-2 text-on-surface-variant border-2 border-dashed border-outline-variant rounded-lg w-full">
+          <p class="text-[12px] italic">Queue is empty — search for a song to get started</p>
       </div>`;
     return;
   }
 
-  list.innerHTML = queue.map(t => `
-    <div class="flex items-center gap-3 p-2 rounded-lg hover:bg-surface-highlight transition-all">
+  const trackRow = (t, isRadio) => `
+    <div class="flex items-center gap-3 p-2 rounded-lg hover:bg-surface-highlight transition-all ${isRadio ? 'opacity-70' : ''}">
       <img src="${esc(t.albumArt || '')}" alt=""
         class="w-10 h-10 rounded object-cover bg-surface-highlight flex-shrink-0"
         onerror="this.style.display='none'"/>
@@ -271,9 +282,23 @@ function renderQueue(queue) {
         <div class="text-on-surface font-bold text-[13px] truncate">${esc(t.name)}</div>
         <div class="text-on-surface-variant text-[11px] truncate">${esc(t.artist)}</div>
       </div>
-      <span class="text-primary/70 text-[10px] font-bold flex-shrink-0 truncate max-w-[80px]">${esc(t.addedBy || '')}</span>
-    </div>
-  `).join('');
+      <span class="text-[10px] font-bold flex-shrink-0 truncate max-w-[80px] ${isRadio ? 'text-primary/40' : 'text-primary/70'}">${esc(t.addedBy || '')}</span>
+    </div>`;
+
+  const divider = `
+    <div class="flex items-center gap-2 py-1.5 px-1">
+      <div class="h-px flex-1 bg-outline-variant"></div>
+      <span class="text-[9px] font-black uppercase tracking-widest text-primary/50">✦ Radio</span>
+      <div class="h-px flex-1 bg-outline-variant"></div>
+    </div>`;
+
+  let html = userQueue.map(t => trackRow(t, false)).join('');
+  if (radioQueue.length > 0) {
+    if (userQueue.length > 0) html += divider;
+    html += radioQueue.map(t => trackRow(t, true)).join('');
+  }
+
+  list.innerHTML = html;
 }
 
 /* ── UI: listeners ──────────────────────────────────────────────────────── */

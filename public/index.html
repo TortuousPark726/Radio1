@@ -1,37 +1,252 @@
 <!DOCTYPE html>
-<html lang="en">
+<html class="dark" lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Radio1</title>
-  <link rel="stylesheet" href="/style.css">
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Radio1</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=Inter:wght@400;500;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "surface-container-high": "#242c24",
+          "surface-container-highest": "#2f372e",
+          "tertiary-fixed": "#e5e2e1",
+          "on-tertiary-fixed": "#1c1b1b",
+          "outline-variant": "#3d4a3d",
+          "inverse-on-surface": "#2b322a",
+          "surface-container-lowest": "#091009",
+          "surface-variant": "#2f372e",
+          "secondary-container": "#454747",
+          "inverse-primary": "#006e2d",
+          "error": "#ffb4ab",
+          "surface": "#0e150e",
+          "secondary-fixed": "#e2e2e2",
+          "on-primary-fixed-variant": "#005320",
+          "on-secondary-fixed": "#1a1c1c",
+          "primary-container": "#1db954",
+          "surface-tint": "#53e076",
+          "on-tertiary-fixed-variant": "#474646",
+          "surface-container-low": "#161d16",
+          "surface-container": "#1a211a",
+          "on-error-container": "#ffdad6",
+          "surface-elevated": "#181818",
+          "on-surface-variant": "#bccbb9",
+          "surface-highlight": "#282828",
+          "on-secondary-fixed-variant": "#454747",
+          "on-tertiary": "#313030",
+          "tertiary-fixed-dim": "#c8c6c5",
+          "surface-bright": "#333b33",
+          "on-secondary-container": "#b4b5b5",
+          "on-primary-container": "#004118",
+          "primary-fixed": "#72fe8f",
+          "primary": "#53e076",
+          "outline": "#869585",
+          "tertiary-container": "#a3a1a1",
+          "surface-base": "#121212",
+          "on-primary": "#003914",
+          "tertiary": "#c8c6c5",
+          "secondary": "#c6c6c7",
+          "primary-fixed-dim": "#53e076",
+          "on-background": "#dde5d9",
+          "surface-dim": "#0e150e",
+          "on-primary-fixed": "#002108",
+          "secondary-fixed-dim": "#c6c6c7",
+          "waveform-dim": "#121212",
+          "on-error": "#690005",
+          "on-secondary": "#2f3131",
+          "error-container": "#93000a",
+          "live-indicator": "#FF4B2B",
+          "background": "#0e150e",
+          "on-tertiary-container": "#383838",
+          "waveform-active": "#1ED760",
+          "inverse-surface": "#dde5d9",
+          "on-surface": "#dde5d9"
+        },
+        "borderRadius": {
+          "DEFAULT": "1rem",
+          "lg": "2rem",
+          "xl": "3rem",
+          "full": "9999px"
+        },
+        "spacing": {
+          "stack-sm": "8px",
+          "container-margin": "24px",
+          "stack-md": "16px",
+          "gutter": "16px",
+          "unit": "4px",
+          "stack-lg": "32px"
+        },
+        "fontFamily": {
+          "display-lg": ["Plus Jakarta Sans"],
+          "headline-lg-mobile": ["Plus Jakarta Sans"],
+          "label-bold": ["Inter"],
+          "body-md": ["Inter"],
+          "headline-md": ["Plus Jakarta Sans"],
+          "headline-lg": ["Plus Jakarta Sans"],
+          "body-lg": ["Inter"]
+        },
+        "fontSize": {
+          "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "800"}],
+          "headline-lg-mobile": ["28px", {"lineHeight": "1.2", "fontWeight": "700"}],
+          "label-bold": ["12px", {"lineHeight": "1.2", "letterSpacing": "0.05em", "fontWeight": "700"}],
+          "body-md": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+          "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "700"}],
+          "headline-lg": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+          "body-lg": ["16px", {"lineHeight": "1.5", "fontWeight": "500"}]
+        }
+      },
+    },
+  }
+</script>
+<style>
+  .material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  }
+  .radio-glow {
+    box-shadow: 0 0 60px 10px rgba(83, 224, 118, 0.15);
+  }
+  .bg-radial-gradient {
+    background: radial-gradient(circle at center, #1a211a 0%, #0e150e 100%);
+  }
+  .pulse-animation {
+    animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 0.4; transform: scale(1); }
+    50% { opacity: 0.7; transform: scale(1.1); }
+  }
+  .button-hover-glow:hover {
+    box-shadow: 0 0 20px 2px rgba(83, 224, 118, 0.4);
+    transform: translateY(-1px);
+  }
+  .floating-orb {
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(30, 215, 96, 0.08) 0%, rgba(30, 215, 96, 0) 70%);
+    filter: blur(60px);
+    z-index: 0;
+    pointer-events: none;
+  }
+</style>
 </head>
-<body>
-  <div class="page-hero">
-    <div class="hero-card">
-      <div class="logo-mark">📻</div>
-      <h1>Radio1</h1>
-      <p class="tagline">Create a room, invite friends, and listen together — each on their own device.</p>
-      <a href="/auth/login" class="btn btn-primary btn-lg">Connect with Spotify</a>
-      <p class="hero-note">⚠ Requires Spotify Premium &nbsp;·&nbsp; Works in Chrome &amp; Firefox</p>
-      <div id="error-msg" class="error-msg"></div>
+<body class="bg-background text-on-surface font-body-md antialiased overflow-hidden selection:bg-primary selection:text-on-primary">
+
+<!-- Atmospheric Background -->
+<div class="fixed inset-0 bg-radial-gradient z-0"></div>
+<div class="floating-orb top-[-10%] left-[-10%] pulse-animation"></div>
+<div class="floating-orb bottom-[-10%] right-[-10%] pulse-animation" style="animation-delay: 2s;"></div>
+
+<main class="relative z-10 flex flex-col items-center justify-center min-h-screen px-container-margin text-center">
+  <!-- Hero Branding Container -->
+  <div class="flex flex-col items-center gap-stack-lg max-w-[600px]">
+
+    <!-- Icon Wrapper -->
+    <div class="relative group">
+      <div class="absolute inset-0 bg-primary/20 blur-3xl rounded-full scale-125 opacity-50 group-hover:opacity-80 transition-opacity duration-700"></div>
+      <div class="relative w-24 h-24 md:w-32 md:h-32 bg-surface-container-high rounded-xl flex items-center justify-center radio-glow border border-outline-variant overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent"></div>
+        <div class="flex flex-col items-center gap-2">
+          <span class="material-symbols-outlined text-[48px] md:text-[64px] text-primary" style="font-variation-settings: 'FILL' 1;">radio</span>
+          <div class="flex gap-1">
+            <div class="w-1 h-3 bg-primary/40 rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
+            <div class="w-1 h-4 bg-primary rounded-full animate-bounce" style="animation-delay: 0.3s"></div>
+            <div class="w-1 h-2 bg-primary/60 rounded-full animate-bounce" style="animation-delay: 0.5s"></div>
+          </div>
+        </div>
+      </div>
     </div>
+
+    <!-- Typography Cluster -->
+    <div class="space-y-stack-md">
+      <h1 class="font-display-lg text-display-lg md:text-[64px] text-white tracking-tighter">Radio1</h1>
+      <p class="font-body-lg text-on-surface-variant max-w-[420px] mx-auto leading-relaxed">
+        Create a room, invite friends, and listen together — each on their own device.
+      </p>
+    </div>
+
+    <!-- Action Area -->
+    <div class="mt-stack-lg w-full flex flex-col items-center gap-stack-md">
+      <a href="/auth/login" class="group relative px-12 py-5 bg-primary text-on-primary font-bold rounded-full text-lg transition-all duration-300 button-hover-glow active:scale-95 flex items-center gap-3 no-underline">
+        <span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">podcasts</span>
+        Connect with Spotify
+      </a>
+
+      <!-- Error message -->
+      <p id="error-msg" class="hidden text-error text-body-md font-medium"></p>
+
+      <!-- Secondary Info -->
+      <div class="flex items-center gap-4 text-on-surface-variant/60 font-label-bold text-label-bold mt-stack-md">
+        <div class="flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-sm">warning</span>
+          <span>Requires Spotify Premium</span>
+        </div>
+        <span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+        <div class="flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-sm">devices</span>
+          <span>Works in Chrome &amp; Firefox</span>
+        </div>
+      </div>
+    </div>
+
   </div>
 
-  <script>
-    const params = new URLSearchParams(location.search);
-    if (params.get('error')) {
-      const el = document.getElementById('error-msg');
-      el.textContent = params.get('error') === 'auth_failed'
-        ? 'Authentication failed — please try again.'
-        : 'Something went wrong. Please try again.';
-      el.classList.add('visible');
-    }
+  <!-- Decorative Waveform -->
+  <div class="fixed bottom-0 left-0 w-full h-32 flex items-end justify-center gap-1 opacity-20 pointer-events-none">
+    <div class="waveform-bar w-1 bg-primary rounded-t-full h-8 animate-[pulse_2s_infinite]"></div>
+    <div class="waveform-bar w-1 bg-primary rounded-t-full h-12 animate-[pulse_2.5s_infinite]"></div>
+    <div class="waveform-bar w-1 bg-primary rounded-t-full h-24 animate-[pulse_1.8s_infinite]"></div>
+    <div class="waveform-bar w-1 bg-primary rounded-t-full h-16 animate-[pulse_3s_infinite]"></div>
+    <div class="waveform-bar w-1 bg-primary rounded-t-full h-32 animate-[pulse_2.2s_infinite]"></div>
+    <div class="waveform-bar w-1 bg-primary rounded-t-full h-20 animate-[pulse_2.7s_infinite]"></div>
+    <div class="waveform-bar w-1 bg-primary rounded-t-full h-40 animate-[pulse_1.5s_infinite]"></div>
+    <div class="waveform-bar w-1 bg-primary rounded-t-full h-20 animate-[pulse_2.7s_infinite]"></div>
+    <div class="waveform-bar w-1 bg-primary rounded-t-full h-32 animate-[pulse_2.2s_infinite]"></div>
+    <div class="waveform-bar w-1 bg-primary rounded-t-full h-16 animate-[pulse_3s_infinite]"></div>
+    <div class="waveform-bar w-1 bg-primary rounded-t-full h-24 animate-[pulse_1.8s_infinite]"></div>
+    <div class="waveform-bar w-1 bg-primary rounded-t-full h-12 animate-[pulse_2.5s_infinite]"></div>
+    <div class="waveform-bar w-1 bg-primary rounded-t-full h-8 animate-[pulse_2s_infinite]"></div>
+  </div>
+</main>
 
-    // Redirect if already logged in
-    fetch('/auth/token').then(r => {
-      if (r.ok) location.href = '/room.html';
+<script>
+  // Show error from URL param
+  const params = new URLSearchParams(location.search);
+  if (params.get('error')) {
+    const el = document.getElementById('error-msg');
+    el.textContent = params.get('error') === 'auth_failed'
+      ? 'Authentication failed — please try again.'
+      : 'Something went wrong. Please try again.';
+    el.classList.remove('hidden');
+  }
+
+  // Redirect if already logged in
+  fetch('/auth/token').then(r => {
+    if (r.ok) location.href = '/room.html';
+  });
+
+  // Mouse tracking glow effect
+  document.addEventListener('mousemove', (e) => {
+    const orbs = document.querySelectorAll('.floating-orb');
+    const x = (e.clientX / window.innerWidth) - 0.5;
+    const y = (e.clientY / window.innerHeight) - 0.5;
+    orbs.forEach((orb, index) => {
+      const factor = index === 0 ? 30 : -30;
+      orb.style.transform = `translate(${x * factor}px, ${y * factor}px)`;
     });
-  </script>
+  });
+
+  // Randomise waveform bar heights and animation speeds
+  document.querySelectorAll('.waveform-bar').forEach(bar => {
+    bar.style.animationDuration = (Math.random() * 2 + 1) + 's';
+    bar.style.height = (Math.random() * 100 + 20) + 'px';
+  });
+</script>
 </body>
 </html>

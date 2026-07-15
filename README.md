@@ -1,0 +1,133 @@
+# Radio1
+
+A collaborative Spotify radio web app. Create a room, share a code, and everyone listens together — each person on their own device. The queue is shared and synced in real time. When the user queue runs dry, AI-powered radio kicks in automatically, recommending songs based on what the room has been adding.
+
+---
+
+## Features
+
+- Real-time synced playback across all listeners in a room
+- Shared queue — anyone in the room can add songs
+- User songs always play first; radio fills in automatically
+- Radio recommendations powered by Last.fm, based on the last 10 songs added to the queue
+- Radio queue refreshes live as people add new songs
+- Repeat prevention (no song repeats within the last 50 tracks)
+
+---
+
+## Prerequisites
+
+- [Node.js](https://nodejs.org/) v18 or later
+- A **Spotify Premium** account (required for the Web Playback SDK)
+- A **Spotify Developer** app (free)
+- A **Last.fm API** key (free)
+
+---
+
+## Step 1 — Create a Spotify Developer App
+
+1. Go to [developer.spotify.com/dashboard](https://developer.spotify.com/dashboard) and log in.
+2. Click **Create app**.
+3. Fill in any name and description.
+4. Under **Redirect URIs**, add exactly: `http://127.0.0.1:3000/auth/callback`
+5. Under **APIs used**, check **Web Playback SDK**.
+6. Save. You'll land on the app dashboard — copy your **Client ID** and **Client Secret**.
+
+> **Important:** Spotify apps start in Development Mode. In this mode, only users you explicitly add as testers can authenticate. To add testers, go to your app → **Settings** → **User Management** and add their Spotify email addresses (max 25 users in dev mode).
+
+---
+
+## Step 2 — Get a Last.fm API Key
+
+1. Create a free Last.fm account at [last.fm](https://www.last.fm).
+2. Go to [last.fm/api/account/create](https://www.last.fm/api/account/create).
+3. Fill in any application name and description. Callback URL and homepage can be left blank.
+4. Submit — you'll be shown your **API key** immediately.
+
+---
+
+## Step 3 — Clone and Install
+
+```bash
+git clone https://github.com/TortuousPark726/Radio1.git
+cd Radio1
+npm install
+```
+
+---
+
+## Step 4 — Configure Environment Variables
+
+Create a `.env` file in the project root (never commit this file):
+
+```
+SPOTIFY_CLIENT_ID=your_spotify_client_id
+SPOTIFY_CLIENT_SECRET=your_spotify_client_secret
+REDIRECT_URI=http://127.0.0.1:3000/auth/callback
+SESSION_SECRET=any_random_string
+PORT=3000
+LASTFM_API_KEY=your_lastfm_api_key
+```
+
+Replace the placeholder values with your actual credentials from Steps 1 and 2.
+
+---
+
+## Step 5 — Run the App
+
+```bash
+node server.js
+```
+
+Open `http://localhost:3000` in Chrome or Firefox and click **Connect with Spotify**.
+
+> **Note:** You must open the app at `http://127.0.0.1:3000` (not `localhost`) if that's what you set as your redirect URI in the Spotify dashboard. The two are not interchangeable for OAuth.
+
+---
+
+## How It Works
+
+### Room system
+- One user creates a room and gets a 6-character code.
+- Others join by entering that code.
+- The host's browser handles playback authentication — all listeners sync to the host's position.
+
+### Queue
+- Any user in the room can search for and add songs to the shared queue.
+- User-added songs always play before radio picks.
+
+### Radio recommendations
+- When the user queue runs low (fewer than 3 radio songs buffered), the server calls Last.fm's `track.getSimilar` API using up to 3 randomly sampled tracks from the last 10 user-added songs.
+- Last.fm returns genre-aware similar tracks.
+- Each similar track is searched on Spotify to get a playable URI.
+- When new songs are added to the queue, the radio queue automatically refreshes after a short debounce.
+
+### Why Last.fm instead of Spotify's recommendation API?
+Spotify deprecated `/v1/recommendations` in November 2024. Several other useful endpoints (`/v1/artists/{id}/related-artists`, `/v1/artists/{id}/top-tracks`) are also restricted for apps in Development Mode. Last.fm's `track.getSimilar` is free, unrestricted, and returns genuinely genre-accurate results.
+
+---
+
+## Project Structure
+
+```
+Radio1/
+├── server.js          # Express server, Socket.io, Spotify OAuth, recommendation logic
+├── public/
+│   ├── index.html     # Landing page
+│   ├── room.html      # Create/join room page
+│   ├── radio.html     # Main player UI
+│   └── js/
+│       └── radio.js   # Client-side playback, queue sync, socket events
+├── .env               # Your credentials (never committed)
+├── .gitignore
+└── package.json
+```
+
+---
+
+## Limitations
+
+- **Spotify Development Mode**: max 25 testers. To go beyond that, you'd need to apply for Spotify's extended quota — see [developer.spotify.com/documentation/web-api/concepts/quota-modes](https://developer.spotify.com/documentation/web-api/concepts/quota-modes).
+- **Spotify Premium required**: The Web Playback SDK only works with Premium accounts.
+- **Single-server**: Room state is stored in memory. Restarting the server clears all rooms. There's no database or persistence layer.
+- **No HTTPS in dev**: Running locally over HTTP is fine; deploying publicly requires HTTPS for the Spotify SDK to work.
