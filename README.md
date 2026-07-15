@@ -35,11 +35,6 @@ To create the application, go to Spotify Developers and log in using your Spotif
 
 ## Step 2 — Get a Last.fm API Key
 
-1. Create a free Last.fm account at [last.fm](https://www.last.fm).
-2. Go to [last.fm/api/account/create](https://www.last.fm/api/account/create).
-3. Fill in any application name and description. Callback URL and homepage can be left blank.
-4. Submit — you'll be shown your **API key** immediately.
-
 Create a Last.fm account(https://www.last.fm) and get it verified. Go to https://www.last.fm/api/account/create and fill the application name and description. The rest stays blank. Submit and copy down the API key. 
 
 ---
