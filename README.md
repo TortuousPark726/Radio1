@@ -1,7 +1,8 @@
 # Radio1
 
-A collaborative Spotify radio web app. Create a room, share a code, and everyone listens together — each person on their own device. The queue is shared and synced in real time. When the user queue runs dry, AI-powered radio kicks in automatically, recommending songs based on what the room has been adding.
+A collaborative Spotify radio web app. Create a room, share a code, and everyone listens together — each person on their own device. The queue is shared and synced in real time. When the user queue runs dry, AI-powered radio kicks in automatically, recommending songs based on what the room has been adding. 
 
+These instructions are added because this app is not scalable with the current limitations of Spotify Developers and Spotify Extended Quota
 ---
 
 ## Features
@@ -18,20 +19,15 @@ A collaborative Spotify radio web app. Create a room, share a code, and everyone
 ## Prerequisites
 
 - [Node.js](https://nodejs.org/) v18 or later
-- A **Spotify Premium** account (required for the Web Playback SDK)
-- A **Spotify Developer** app (free)
-- A **Last.fm API** key (free)
+- **Spotify Premium** account
+- **Spotify Developer** app (free)
+- **Last.fm API** key (free)
 
 ---
 
-## Step 1 — Create a Spotify Developer App
+## Step 1 — Create Spotify Developer App
 
-1. Go to [developer.spotify.com/dashboard](https://developer.spotify.com/dashboard) and log in.
-2. Click **Create app**.
-3. Fill in any name and description.
-4. Under **Redirect URIs**, add exactly: `http://127.0.0.1:3000/auth/callback`
-5. Under **APIs used**, check **Web Playback SDK**.
-6. Save. You'll land on the app dashboard — copy your **Client ID** and **Client Secret**.
+To create the application, go to Spotify Developers and log in using your Spotify Premium account. Head to dashboard and create the app. Fill in the name and description. Under Redirect URIs, add 'http://127.0.0.1:3000/auth/callback' and under APIs used, check Web Playback SDK. Create the app and get your Client ID and Client Secret
 
 > **Important:** Spotify apps start in Development Mode. In this mode, only users you explicitly add as testers can authenticate. To add testers, go to your app → **Settings** → **User Management** and add their Spotify email addresses (max 25 users in dev mode).
 
@@ -43,6 +39,8 @@ A collaborative Spotify radio web app. Create a room, share a code, and everyone
 2. Go to [last.fm/api/account/create](https://www.last.fm/api/account/create).
 3. Fill in any application name and description. Callback URL and homepage can be left blank.
 4. Submit — you'll be shown your **API key** immediately.
+
+Create a Last.fm account(https://www.last.fm) and get it verified. Go to https://www.last.fm/api/account/create and fill the application name and description. The rest stays blank. Submit and copy down the API key. 
 
 ---
 
@@ -69,7 +67,7 @@ PORT=3000
 LASTFM_API_KEY=your_lastfm_api_key
 ```
 
-Replace the placeholder values with your actual credentials from Steps 1 and 2.
+Replace the placeholder values with your copied credentials from Steps 1 and 2.
 
 ---
 
@@ -124,10 +122,3 @@ Radio1/
 ```
 
 ---
-
-## Limitations
-
-- **Spotify Development Mode**: max 25 testers. To go beyond that, you'd need to apply for Spotify's extended quota — see [developer.spotify.com/documentation/web-api/concepts/quota-modes](https://developer.spotify.com/documentation/web-api/concepts/quota-modes).
-- **Spotify Premium required**: The Web Playback SDK only works with Premium accounts.
-- **Single-server**: Room state is stored in memory. Restarting the server clears all rooms. There's no database or persistence layer.
-- **No HTTPS in dev**: Running locally over HTTP is fine; deploying publicly requires HTTPS for the Spotify SDK to work.
