@@ -27,7 +27,7 @@ These instructions are added because this app is not scalable with the current l
 
 ## Step 1 — Create Spotify Developer App
 
-To create the application, go to Spotify Developers and log in using your Spotify Premium account. Head to dashboard and create the app. Fill in the name and description. Under Redirect URIs, add 'http://127.0.0.1:3000/auth/callback' and under APIs used, check Web Playback SDK. Create the app and get your Client ID and Client Secret
+To create the application, go to Spotify Developers and log in using your Spotify Premium account. Head to dashboard and create the app. Fill in the name and description. Under Redirect URIs, add 'http://127.0.0.1:3000/auth/callback' and under APIs used, check Web Playback SDK. Create the app and get your Client ID and Client Secret. Additionally, in the user management tab, add the emails of the users intending to use this app(including yourself) or else users won't be able to access the app and an error will show instead. 
 
 > **Important:** Spotify apps start in Development Mode. In this mode, only users you explicitly add as testers can authenticate. To add testers, go to your app → **Settings** → **User Management** and add their Spotify email addresses (max 25 users in dev mode).
 
